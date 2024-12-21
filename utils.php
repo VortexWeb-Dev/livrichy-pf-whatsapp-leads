@@ -62,10 +62,10 @@ function logData(string $filename, string $message)
     file_put_contents($logFile, date('Y-m-d H:i:s') . " - $message\n", FILE_APPEND);
 }
 
-function fetchLeads(string $type, string $timestamp, string $authToken)
+function fetchLeads(string $type, string $date, string $authToken)
 {
     // $url = "https://www.bayut.com/api-v7/stats/website-client-leads?type=$type&timestamp=$timestamp";
-    $url = "https://api-v2.mycrm.com/$type-leads?filters[date][from]=2024-12-18";
+    $url = "https://api-v2.mycrm.com/$type-leads?filters[date][from]=$date";
 
     try {
         $data = makeApiRequest($url, [

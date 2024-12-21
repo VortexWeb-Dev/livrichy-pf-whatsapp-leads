@@ -4,7 +4,7 @@ $token_file = __DIR__ . '/auth_token.json';
 
 $AUTH_TOKEN = getAuthToken($token_file);
 
-$timestamp = date('Y-m-d H:i:s', strtotime('-3 minutes'));
+$timestamp = date('Y-m-d');
 $encodedTimestamp = urlencode($timestamp);
 
 $lead_file = __DIR__ . '/processed_leads.txt';
