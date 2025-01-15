@@ -148,7 +148,7 @@ function getUser($filter = [])
 {
     $response = CRest::call('user.get', [
         'filter' => $filter,
-        'select' => ['ID', 'NAME']
+        'select' => ['ID', 'NAME', 'EMAIL']
     ]);
 
     if (isset($response['result']) && $response['total'] > 0) {

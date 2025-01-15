@@ -28,6 +28,15 @@ if ($whatsapp_leads) {
         $agent_email = $lead['user']['public']['email'];
         $client_phone = $lead['phone'];
 
+        logData('whatsapp-lead.log', print_r([
+            'id' => $id,
+            'property_reference' => $property_reference,
+            'agent_name' => $agent_name,
+            'agent_phone' => $agent_phone,
+            'agent_email' => $agent_email,
+            'client_phone' => $client_phone
+        ], true));
+
         $existing_contact = checkExistingContact(['PHONE' => $client_phone]);
 
         $fields = [
