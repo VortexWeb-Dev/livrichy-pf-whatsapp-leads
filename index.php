@@ -113,7 +113,7 @@ if ($call_leads) {
             'ufCrm12CallStatus' => $call_status,
             'ufCrm12TotalDuration' => $call_time,
             'ufCrm12ConnectedDuration' => $talk_time,
-            'ufCrm12CallRecordingUrl' => $recording_url,
+            'ufCrm12CallRecordingUrl' => shortenUrl($recording_url),
             'ufCrm12CallStart' => $call_start,
             'ufCrm12CallEnd' => $call_end,
             'ufCrm12TalkTime' => $talk_time,

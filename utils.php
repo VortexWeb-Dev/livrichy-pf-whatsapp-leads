@@ -180,7 +180,8 @@ function determineAgentId($agent_email)
     return ($agent_id == 433) ? 1043 : $agent_id;
 }
 
-function getAuthToken($token_file) {
+function getAuthToken($token_file)
+{
     if (file_exists($token_file)) {
         $token_data = json_decode(file_get_contents($token_file), true);
         if ($token_data && time() < $token_data['expires_at']) {
@@ -192,16 +193,17 @@ function getAuthToken($token_file) {
     return getNewAuthToken($token_file);
 }
 
-function getNewAuthToken($token_file) {
+function getNewAuthToken($token_file)
+{
     $api_url = "https://auth.propertyfinder.com/auth/oauth/v1/token";
     $authorization = "Basic dENMWWguRWZ0RGZNcmJ0ZXhmRWF6S3VWTmtINUJXUkpDZmZuVDMzcTo0MTJiN2FmNjcwMmUxZjA1OTUxODQyNDI0MmMxMzc3OQ==";
-    
+
     // Prepare the request payload
     $data = [
         "scope" => "openid",
         "grant_type" => "client_credentials"
     ];
-    
+
     // Initialize cURL
     $ch = curl_init($api_url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -211,7 +213,7 @@ function getNewAuthToken($token_file) {
         "Content-Type: application/json"
     ]);
     curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-    
+
     // Execute the request
     $response = curl_exec($ch);
     $http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -221,7 +223,7 @@ function getNewAuthToken($token_file) {
         error_log("Failed to fetch token. HTTP Status: $http_status, Response: $response");
         return null;
     }
-    
+
     // Decode and store the token
     $response_data = json_decode($response, true);
     if (isset($response_data['access_token'])) {
@@ -233,9 +235,10 @@ function getNewAuthToken($token_file) {
         return null;
     }
 }
-                                                                                                              
-function httpPost($url, $headers, $post_data) {
-    $ch = curl_init();                                                                                          
+
+function httpPost($url, $headers, $post_data)
+{
+    $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_POST, true);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -271,4 +274,43 @@ function timeToSec($time)
 {
     $time = explode(':', $time);
     return $time[0] * 3600 + $time[1] * 60 + $time[2];
+}
+
+function shortenUrl($urlToShorten)
+{
+    $apiKey = "b5de7cfb65msh1ffd2a1d02a59bap110214jsn39c5a13a3d32";
+    // Initialize cURL
+    $curl = curl_init();
+
+    // Set cURL options
+    curl_setopt_array($curl, [
+        CURLOPT_URL => "https://url-shortener-service.p.rapidapi.com/shorten",
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => "",
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 30,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => "POST",
+        CURLOPT_POSTFIELDS => "url=" . urlencode($urlToShorten),
+        CURLOPT_HTTPHEADER => [
+            "Content-Type: application/x-www-form-urlencoded",
+            "x-rapidapi-host: url-shortener-service.p.rapidapi.com",
+            "x-rapidapi-key: $apiKey"
+        ],
+    ]);
+
+    // Execute the cURL request
+    $response = curl_exec($curl);
+    $err = curl_error($curl);
+
+    // Close cURL
+    curl_close($curl);
+
+    // Return response or error
+    if ($err) {
+        return "cURL Error #:" . $err;
+    } else {
+        $response = json_decode($response, true);
+        return $response['result_url'];
+    }
 }
