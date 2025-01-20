@@ -65,7 +65,7 @@ function logData(string $filename, string $message)
 function fetchLeads(string $type, string $date, string $authToken)
 {
     // $url = "https://www.bayut.com/api-v7/stats/website-client-leads?type=$type&timestamp=$timestamp";
-    $url = "https://api-v2.mycrm.com/$type-leads?filters[date][from]=$date";
+    $url = "https://api-v2.mycrm.com/$type?filters[date][from]=$date";
 
     try {
         $data = makeApiRequest($url, [
@@ -247,4 +247,28 @@ function httpPost($url, $headers, $post_data) {
     }
     curl_close($ch);
     return $response;
+}
+
+function registerCall($fields)
+{
+    $res = CRest::call('telephony.externalcall.register', $fields);
+    return $res['result'];
+}
+
+function finishCall($fields)
+{
+    $res = CRest::call('telephony.externalcall.finish', $fields);
+    return $res['result'];
+}
+
+function attachRecord($fields)
+{
+    $res = CRest::call('telephony.externalcall.attachRecord', $fields);
+    return $res['result'];
+}
+
+function timeToSec($time)
+{
+    $time = explode(':', $time);
+    return $time[0] * 3600 + $time[1] * 60 + $time[2];
 }
